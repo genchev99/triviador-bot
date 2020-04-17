@@ -7,7 +7,10 @@ const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
 
 /* Add plugins */
 puppeteer.use(
-  require('puppeteer-extra-plugin-flash')()
+  require('puppeteer-extra-plugin-flash')({
+    allowFlash: true,
+    pluginPath: '/usr/lib/pepperflashplugin-nonfree/libpepflashplayer.so',
+  })
 );
 
 puppeteer.use(AdblockerPlugin());
