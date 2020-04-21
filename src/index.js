@@ -2,6 +2,11 @@
 
 require('dotenv').config({path: './.env'});
 
+const tesseract = require('node-tesseract-ocr');
+const config = {
+  lang: "bul",
+};
+
 const puppeteer = require('puppeteer-extra');
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
 
@@ -15,6 +20,8 @@ puppeteer.use(
 
 puppeteer.use(AdblockerPlugin());
 
+const tempImagePath = '/home/pr3dat0r/triviador-bot/temp.png';
+
 const login = async page => {
   await page.goto('https://bulgaria.triviador.net/');
 
@@ -25,7 +32,18 @@ const login = async page => {
     page.click('input[type=submit]'),
     page.waitForNavigation(),
   ]);
+};
 
+const parseScreen = async page => {
+  const game = await page.$('#CLIENTCELL');
+  await game.screenshot({path: tempImagePath});
+
+  const text = await tesseract.recognize(tempImagePath, config)
+    .catch(error => {
+      console.log(error.message)
+    });
+
+  console.log(text);
 };
 
 (async () => {
@@ -36,4 +54,9 @@ const login = async page => {
   const page = await browser.newPage();
 
   await login(page);
+
+  while (true) {
+    await parseScreen(page);
+    await page.waitFor(5000);
+  }
 })();
