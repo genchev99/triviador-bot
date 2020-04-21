@@ -1,0 +1,8 @@
+'use strict';
+
+module.exports = {
+  LOADING: [1093015039, 1395925503],
+  START_GAME: 1,
+  INITIATE_DATE: [1284231423],
+  QUESTIONS: [3420777983, 4294967295]
+};
